@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jquery 轮播</title>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+        }
+        ul,li{
+            list-style: none;
+        }
+        .wrapper{
+            width:1600px;
+            margin:0 auto;
+            padding-top:100px;
+        }
+        #focus{
+            width:1600px;
+            height:546px;
+            overflow: hidden;
+            position: relative;
+        }
+        #focus .pic-list li{
+            float:left;
+            width:1600px;
+            height:780px;
+        }
+        #focus .pagination{
+            display: inline-block;
+            background: #999;
+            width:10px;
+            height:10px;
+            border-radius: 10px;
+            border:1px solid transparent;
+            margin:5px 10px;
+        }
+        #focus .pic-list{
+            position: absolute;
+        }
+        #focus .page-list{
+            position: absolute;
+            bottom: 3px;
+            left:770px;
+        }
+        #focus .page-list .active{
+            border-color:#ea252b;
+            background: #fff;
+        }
+        #focus .page-list li{
+            float:left;
+        }
+        .left, .right{
+            position: absolute;
+        }
+        .right{
+            right:0;
+            top:248px;
+        }
+        .left{
+            top:248px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="focus">
+            <ul class="pic-list">
+                <li><a href="#"><img src="./images/f1_slide2_a.jpg" alt=""></a></li>
+                <li><a href="#"><img src="./images/f1_slide2_b.png" alt=""></a></li>
+                <li><a href="#"><img src="./images/f1_slide2_c.jpg" alt=""></a></li>
+                <li><a href="#"><img src="./images/f1_slide2_d.jpg" alt=""></a></li>
+            </ul>
+            <ul class="page-list">
+                <li><a href="#" class="active pagination"></a></li>
+                <li><a href="#" class="pagination"></a></li>
+                <li><a href="#" class="pagination"></a></li>
+                <li><a href="#" class="pagination"></a></li>
+            </ul>
+            <a href="#"><img src="./images/note_pro_img14.png" alt="" class="left"></a>
+            <a href="#"><img src="./images/note_pro_img13.png" alt="" class="right"></a>
+        </div>
+    </div>
+    
+    <script>
+        $(function(){
+            var sWidth = $("#focus").width(),
+                len = $(".pic-list li").length,
+                index = 0,
+                picTimer;
+            $(".pic-list").css("width",sWidth*(len+1));
+            
+            $("#focus").hover(function(){
+                clearInterval(picTimer);
+            },function(){
+                picTimer = setInterval(function(){
+                    index++; 
+                    $(".page-list li").eq(index-1).find("a").removeClass("active");
+                    if(index == len){
+                        index = 0;
+                        showFirstPic();
+                        $(".page-list li").eq(index).find("a").addClass("active");
+                    }else{
+                        showPics(index);
+                        $(".page-list li").eq(index).find("a").addClass("active");
+                    }
+                     
+                },2000)
+            })
+            
+            $(".page-list li").each(function(){
+                $(this).bind("click",function(){
+                    $(".page-list li").eq(index).find("a").removeClass("active");
+                    $(this).find("a").addClass("active");
+                    var $index=  $(this).index();
+                    showPics($index);
+                    index = $index;
+                })
+            })
+            
+            $(".left").bind("click",function(){
+                index--;
+                $(".page-list li").eq(index+1).find("a").removeClass("active");
+                if(index == -1){
+                    index = len-1;
+                    $(".page-list li").eq(index).find("a").addClass("active");
+                }
+                if(index == len){
+                    $(".page-list li").eq(index-1).find("a").removeClass("active");
+                    index = len-2;
+                }
+                showPics(index);
+                $(".page-list li").eq(index).find("a").addClass("active");
+                
+            })
+            
+            $(".right").bind("click",function(){
+                index++;
+                $(".page-list li").eq(index-1).find("a").removeClass("active");
+                if(index == len){
+                    index = 0;
+                    showFirstPic();
+                    $(".page-list li").eq(index).find("a").addClass("active");
+                }else{
+                    if(index == -1){
+                        $(".page-list li").eq(0).find("a").removeClass("active");
+                        index = 1;
+                    }
+                    showPics(index);
+                    $(".page-list li").eq(index).find("a").addClass("active");
+                }
+
+            })
+          
+            function showPics(index){
+                var nowLeft = -index*sWidth;
+                $(".pic-list").stop(true,false).animate({"left":nowLeft},500);
+            }
+            
+            function showFirstPic(){
+                $(".pic-list").append($(".pic-list li:first").clone());
+                var nowLeft = -len*sWidth;
+                $(".pic-list").stop(true,false).animate({"left":nowLeft},500,function(){
+                    $(".pic-list").css("left",0);
+                    $(".pic-list li:last").remove();
+                })
+            }
+        })
+    </script>   
+</body>
+</html>
