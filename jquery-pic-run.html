@@ -125,13 +125,15 @@
                 $(".page-list li").eq(index+1).find("a").removeClass("active");
                 if(index == -1){
                     index = len-1;
+                    showLastPic();
                     $(".page-list li").eq(index).find("a").addClass("active");
-                }
+                }else{
                 if(index == len){
                     $(".page-list li").eq(index-1).find("a").removeClass("active");
                     index = len-2;
                 }
                 showPics(index);
+            }
                 $(".page-list li").eq(index).find("a").addClass("active");
                 
             })
@@ -166,6 +168,20 @@
                     $(".pic-list").css("left",0);
                     $(".pic-list li:last").remove();
                 })
+            }
+            function showLastPic(){
+                $(".pic-list").css('left','-sWidth').prepend($(".pic-list li:last").clone());
+                var afterLeft = -((len-1)*sWidth);
+                $(".pic-list")
+                    .stop(true,false)
+                    .animate(
+                        {"left":'0px'},
+                        500,
+                        function(){
+                            $(".pic-list").css("left",afterLeft);
+                            $(".pic-list li:first").remove();
+                        }
+                    );
             }
         })
     </script>   
