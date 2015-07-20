@@ -170,7 +170,7 @@
                 })
             }
             function showLastPic(){
-                $(".pic-list").css('left','-sWidth').prepend($(".pic-list li:last").clone());
+                $(".pic-list").css('left',-sWidth+'px').prepend($(".pic-list li:last").clone());
                 var afterLeft = -((len-1)*sWidth);
                 $(".pic-list")
                     .stop(true,false)
